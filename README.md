@@ -133,72 +133,66 @@ For example:
 ```
 package main
 
-
 import (
 	"github.com/reiver/go-oi"
 	"github.com/reiver/go-telnet"
 	"github.com/reiver/go-telnet/telsh"
 
-	"fmt"
 	"io"
 	"time"
 )
 
-
-func fiveHandler(stdin io.ReadCloser, stdout io.WriteCloser, stderr io.WriteCloser)error {
+func fiveHandler(stdin io.ReadCloser, stdout io.WriteCloser, stderr io.WriteCloser, args ...string) error {
 	oi.LongWriteString(stdout, "The number FIVE looks like this: 5\r\n")
 
 	return nil
 }
 
-func fiveProducer(ctx telsh.Context, name string, args ...string) telsh.Handler{
+func fiveProducer(ctx telnet.Context, name string, args ...string) telsh.Handler {
 	return telsh.PromoteHandlerFunc(fiveHandler)
 }
 
-
-
-func danceHandler(stdin io.ReadCloser, stdout io.WriteCloser, stderr io.WriteCloser)error {
-	for i:=0; i<20; i++ {
+func danceHandler(stdin io.ReadCloser, stdout io.WriteCloser, stderr io.WriteCloser, args ...string) error {
+	for i := 0; i < 20; i++ {
 		oi.LongWriteString(stdout, "\r⠋")
-		time.Sleep(50*time.Millisecond)
+		time.Sleep(50 * time.Millisecond)
 
 		oi.LongWriteString(stdout, "\r⠙")
-		time.Sleep(50*time.Millisecond)
+		time.Sleep(50 * time.Millisecond)
 
 		oi.LongWriteString(stdout, "\r⠹")
-		time.Sleep(50*time.Millisecond)
+		time.Sleep(50 * time.Millisecond)
 
 		oi.LongWriteString(stdout, "\r⠸")
-		time.Sleep(50*time.Millisecond)
+		time.Sleep(50 * time.Millisecond)
 
 		oi.LongWriteString(stdout, "\r⠼")
-		time.Sleep(50*time.Millisecond)
+		time.Sleep(50 * time.Millisecond)
 
 		oi.LongWriteString(stdout, "\r⠴")
-		time.Sleep(50*time.Millisecond)
+		time.Sleep(50 * time.Millisecond)
 
 		oi.LongWriteString(stdout, "\r⠦")
-		time.Sleep(50*time.Millisecond)
+		time.Sleep(50 * time.Millisecond)
 
 		oi.LongWriteString(stdout, "\r⠧")
-		time.Sleep(50*time.Millisecond)
+		time.Sleep(50 * time.Millisecond)
 
 		oi.LongWriteString(stdout, "\r⠇")
-		time.Sleep(50*time.Millisecond)
+		time.Sleep(50 * time.Millisecond)
 
 		oi.LongWriteString(stdout, "\r⠏")
-		time.Sleep(50*time.Millisecond)
+		time.Sleep(50 * time.Millisecond)
 	}
 	oi.LongWriteString(stdout, "\r \r\n")
 
 	return nil
 }
 
-func danceProducer(ctx telsh.Context, name string, args ...string) telsh.Handler{
+func danceProducer(ctx telnet.Context, name string, args ...string) telsh.Handler {
 
 	return telsh.PromoteHandlerFunc(danceHandler)
 }
-
 
 func main() {
 
@@ -214,22 +208,17 @@ func main() {
 
 `
 
-
 	// Register the "five" command.
-	commandName     := "five"
+	commandName := "five"
 	commandProducer := telsh.ProducerFunc(fiveProducer)
 
 	shellHandler.Register(commandName, commandProducer)
 
-
-
 	// Register the "dance" command.
-	commandName      = "dance"
-	commandProducer  = telsh.ProducerFunc(danceProducer)
+	commandName = "dance"
+	commandProducer = telsh.ProducerFunc(danceProducer)
 
 	shellHandler.Register(commandName, commandProducer)
-
-
 
 	shellHandler.Register("dance", telsh.ProducerFunc(danceProducer))
 
